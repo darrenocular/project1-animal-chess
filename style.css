@@ -1,0 +1,29 @@
+/* COLORS */
+/**
+
+**/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Helvetica;
+  height: 100vh;
+  text-align: center;
+}
+
+header {
+  padding: 24px;
+}
+
+button {
+  padding: 8px 16px;
+  width: 240px;
+}
+
+#start-menu > button {
+  display: block;
+  margin: 16px auto;
+}
