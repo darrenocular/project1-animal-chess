@@ -7,10 +7,19 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header><h1>Animal Chess</h1></header>
+    <div id="info-panel">
+      <h1>It is<span id="current-player">black</span>'s turn.</h1>
+    </div>
+    <div id="black-panel">
+      <h3>Black</h3>
+    </div>
+    <div id="gameboard">Gameboard</div>
+    <div id="red-panel">
+      <h3>Red</h3>
+    </div>
     <div id="menu-buttons">
-      <button>START NEW GAME</button>
       <button>RULES</button>
+      <button>RESTART GAME</button>
     </div>
     <script src="pieces.js"></script>
     <script src="app.js"></script>
