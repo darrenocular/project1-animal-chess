@@ -3,6 +3,8 @@
 
 **/
 
+/*----- GENERAL ASSETS -----*/
+
 * {
   box-sizing: border-box;
 }
@@ -23,12 +25,18 @@ button {
   width: 240px;
 }
 
+/*----- RULES POP-UP -----*/
+
 div.fixed {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   width: 80vw;
   border: 3px solid black;
+}
+
+#rules {
+  background-color: white;
 }
 
 #rules > p,
@@ -41,6 +49,8 @@ ul {
 #rules > ul {
   margin: 16px;
 }
+
+/*----- START MENU -----*/
 
 #start-menu > button {
   display: block;

@@ -31,11 +31,9 @@ function renderBoard() {}
 // Check board for win
 function checkBoardForWin() {}
 
-/*----- EVENT LISTENERS -----*/
-// Toggle rules
-document.querySelector(".rules-btn").addEventListener("click", () => {
+function toggleRules() {
   const rulesPopup = document.querySelector("#rules");
-  // Toggle rules
+
   if (rulesPopup.hidden === true) {
     rulesPopup.hidden = false;
 
@@ -43,4 +41,8 @@ document.querySelector(".rules-btn").addEventListener("click", () => {
   } else {
     rulesPopup.hidden = true;
   }
-});
+}
+
+/*----- EVENT LISTENERS -----*/
+// Toggle rules
+document.querySelector(".rules-btn").addEventListener("click", toggleRules);
