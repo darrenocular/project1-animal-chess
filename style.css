@@ -23,6 +23,25 @@ button {
   width: 240px;
 }
 
+div.fixed {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80vw;
+  border: 3px solid black;
+}
+
+#rules > p,
+ul {
+  text-align: left;
+  padding: 0 24px;
+  line-height: 1.2;
+}
+
+#rules > ul {
+  margin: 16px;
+}
+
 #start-menu > button {
   display: block;
   margin: 16px auto;

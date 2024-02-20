@@ -8,9 +8,76 @@
   </head>
   <body>
     <header><h1>Animal Chess</h1></header>
+    <div class="fixed" id="rules" hidden>
+      <h2>Rules</h2>
+      <h3>Introduction</h3>
+      <p>
+        Welcome to the jungle. This is a game of chess, played with opposing
+        factions of animals.
+      </p>
+      <p>
+        As with any society, high and low, there is a hierarchy. In this
+        make-believe world, where mindless vying for power has descended upon
+        its inhabitants, some semblance of normalcy (or so we think) has been
+        given by God.
+      </p>
+      <p>
+        In order of power: Elephant, Lion, Tiger, Leopard, Wolf, Dog, Cat and
+        Rat. So, the Elephant can "kill" another Elephant (and all other weaker
+        animals), while the Lion can kill another Lion (and all other weaker
+        animals) but not the Elephant, and so forth. Some have been blessed with
+        size, while others haven't. Size matters.
+      </p>
+      <p>
+        With perhaps the exception of the Rat. As an old Chinese legend goes,
+        the Rat has the ability to scurry into the Elephant's ear and gnaw at
+        its brain. So, while the Elephant can "kill" another Elephant (and all
+        other animals beneath itself), the Elephant's Achilles' heel comes
+        unfortunately in the form of the puny one - the Rat. The Elephant cannot
+        "kill" the Rat under any circumstances.
+      </p>
+      <h3>How to win?</h3>
+      <p>
+        Win by either moving any one of your animals into the opponent's den or
+        wiping the jungle clean of all the opponent's animals.
+      </p>
+      <h3>Detailed gameplay</h3>
+      <ul>
+        <li>
+          You may move a piece at the start of every turn. All pieces can only
+          move 1 square horizontally or vertically (not diagonally).
+        </li>
+        <li>An animal cannot move into its own den.</li>
+        <li>
+          All animals can move into either player's trap squares. An animal that
+          enters any of the opponent's trap squares is reduced in rank to 0. It
+          can be "killed" by any of the opponent's pieces (regardless of
+          hierarchy) and does not have the power to "kill" any of the opponent's
+          adjacent pieces. A trapped piece has its normal power restored when it
+          exits the opponent's trap square.
+        </li>
+        <li>
+          There are special rules for the river: (1) only the Rat can enter the
+          river; and (2) only the Lion and the Tiger can jump over a river to
+          the next non-water square on the other side (and "kill" an opponent's
+          animal of equal or lower rank). But a jumping move is blocked if there
+          is a Rat of either side in the intervening water squares.
+        </li>
+        <li>
+          Because only the Rat can enter the river, a Rat in the river can only
+          be killed by another Rat in the river.
+        </li>
+        <li>
+          The Rat can only "kill" the Elephant from land and not the river. This
+          means that the Rat cannot move from the river to "kill" an Elephant on
+          an adjacent non-water square.
+        </li>
+      </ul>
+      <p>It is the survival of the fittest. Will you take on the challenge?</p>
+    </div>
     <div id="start-menu">
-      <button class="new-game">START NEW GAME</button>
-      <button class="rules">RULES</button>
+      <a href="board.html"><button class="new-game">START NEW GAME</button></a>
+      <button class="rules-btn">RULES</button>
     </div>
     <script src="pieces.js"></script>
     <script src="app.js"></script>
