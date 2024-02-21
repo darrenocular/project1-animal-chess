@@ -86,20 +86,21 @@
       </p>
     </div>
     <div id="info-panel">
-      <h1>It is <span id="current-player">black</span>'s turn.</h1>
+      <h2><span class="blue" id="current-player">Blue</span> to move.</h2>
     </div>
-    <div id="black-panel">
-      <h3>Black</h3>
-    </div>
-    <div id="gameboard">Gameboard</div>
-    <div id="red-panel">
-      <h3>Red</h3>
+    <div class="flex">
+      <div class="blue player-panel">
+        <h3>Blue</h3>
+      </div>
+      <div id="gameboard"></div>
+      <div class="red player-panel">
+        <h3>Red</h3>
+      </div>
     </div>
     <div id="menu-buttons">
       <button class="rules-btn">RULES</button>
-      <a href="board.html"><button>RESTART GAME</button></a>
+      <a href="board.html"><button class="restart-btn">RESTART GAME</button></a>
     </div>
-    <script src="pieces.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
