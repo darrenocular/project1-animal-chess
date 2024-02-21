@@ -46,3 +46,6 @@ function toggleRules() {
 /*----- EVENT LISTENERS -----*/
 // Toggle rules
 document.querySelector(".rules-btn").addEventListener("click", toggleRules);
+document
+  .querySelector("#rules-header > button")
+  .addEventListener("click", toggleRules);

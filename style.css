@@ -25,6 +25,10 @@ button {
   width: 240px;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 /*----- RULES POP-UP -----*/
 
 div.fixed {
@@ -37,6 +41,9 @@ div.fixed {
 
 #rules {
   background-color: white;
+  height: 800px;
+  overflow: auto;
+  animation: fadeIn 0.5s;
 }
 
 #rules > p,
@@ -50,9 +57,50 @@ ul {
   margin: 16px;
 }
 
+#rules li {
+  padding-bottom: 8px;
+}
+
+#rules-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+#rules-header > h2 {
+  padding: 16px 0;
+  margin-top: 0;
+}
+
+#rules-header > button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(255, 0, 0, 0.8);
+  border: 0;
+  border-radius: 4px;
+  width: auto;
+  color: white;
+}
+
+#rules-header > button:hover {
+  background-color: rgba(255, 0, 0, 0.9);
+  cursor: pointer;
+}
+
 /*----- START MENU -----*/
 
 #start-menu > button {
   display: block;
   margin: 16px auto;
+}
+
+/*----- ANIMATION -----*/
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

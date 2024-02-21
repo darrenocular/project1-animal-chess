@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header><h1>Animal Chess</h1></header>
+    <header><h1>斗兽棋 (Animal Chess)</h1></header>
     <div class="fixed" id="rules" hidden>
-      <h2>Rules</h2>
+      <div id="rules-header">
+        <h2>Rules</h2>
+        <button>X</button>
+      </div>
       <h3>Introduction</h3>
       <p>
         Welcome to the jungle. This is a game of chess, played with opposing
@@ -22,19 +25,20 @@
         given by God.
       </p>
       <p>
-        In order of power: Elephant, Lion, Tiger, Leopard, Wolf, Dog, Cat and
-        Rat. So, the Elephant can "kill" another Elephant (and all other weaker
-        animals), while the Lion can kill another Lion (and all other weaker
+        In order of power:
+        <strong>Elephant, Lion, Tiger, Leopard, Wolf, Dog, Cat and Rat</strong>.
+        So, the Elephant can "kill" another Elephant (and all other weaker
+        animals), while the Lion can "kill" another Lion (and all other weaker
         animals) but not the Elephant, and so forth. Some have been blessed with
         size, while others haven't. Size matters.
       </p>
       <p>
         With perhaps the exception of the Rat. As an old Chinese legend goes,
         the Rat has the ability to scurry into the Elephant's ear and gnaw at
-        its brain. So, while the Elephant can "kill" another Elephant (and all
-        other animals beneath itself), the Elephant's Achilles' heel comes
-        unfortunately in the form of the puny one - the Rat. The Elephant cannot
-        "kill" the Rat under any circumstances.
+        its brain. So, while the Elephant is the strongest in the field, the
+        Elephant's Achilles' heel comes unfortunately in the form of the little
+        one - the Rat. The Elephant cannot "kill" the Rat under any
+        circumstances.
       </p>
       <h3>How to win?</h3>
       <p>
@@ -44,8 +48,9 @@
       <h3>Detailed gameplay</h3>
       <ul>
         <li>
-          You may move a piece at the start of every turn. All pieces can only
-          move 1 square horizontally or vertically (not diagonally).
+          You may move a piece during every turn. All pieces can only move 1
+          square horizontally or vertically (not diagonally). However, note the
+          special rules for the river below.
         </li>
         <li>An animal cannot move into its own den.</li>
         <li>
@@ -73,7 +78,12 @@
           an adjacent non-water square.
         </li>
       </ul>
-      <p>It is the survival of the fittest. Will you take on the challenge?</p>
+      <p>
+        <em
+          >It is the survival of the fittest. Will you take on the
+          challenge?</em
+        >
+      </p>
     </div>
     <div id="start-menu">
       <a href="board.html"><button class="new-game">START NEW GAME</button></a>
