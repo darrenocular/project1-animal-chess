@@ -68,6 +68,19 @@ const START_POSITION = {
   },
 };
 
+const IMAGE_LINKS = {
+  trap: "assets/trap.png",
+  den: "assets/den.png",
+  elephant: "assets/elephant.png",
+  lion: "assets/lion.png",
+  tiger: "assets/tiger.png",
+  leopard: "assets/leopard.png",
+  wolf: "assets/wolf.png",
+  dog: "assets/dog.png",
+  cat: "assets/cat.png",
+  rat: "assets/rat.png",
+};
+
 /*----- STATE VARIABLES -----*/
 
 /*----- CACHED ELEMENTS -----*/
@@ -93,12 +106,65 @@ function renderBoard() {
     gameboard.append(newSquare);
   }
 
-  // Render trap and den
-  // Render river
+  renderTraps();
+  renderDens();
+  renderRiver();
+  renderPieces();
+}
+
+// Render traps
+function renderTraps() {
+  const squares = document.querySelectorAll(".square");
+  for (const square of squares) {
+    if (BOARD_CONFIG["blue"]["trap"].includes(square.id)) {
+      square.innerHTML = `<img src="${IMAGE_LINKS.trap}" class="blue square-img" />`;
+    } else if (BOARD_CONFIG["red"]["trap"].includes(square.id)) {
+      square.innerHTML = `<img src="${IMAGE_LINKS.trap}" class="red square-img" />`;
+    }
+  }
+}
+
+// Render dens
+function renderDens() {
+  const squares = document.querySelectorAll(".square");
+  for (const square of squares) {
+    if (BOARD_CONFIG["blue"]["den"] === square.id) {
+      square.innerHTML = `<img src="${IMAGE_LINKS.den}" class="blue square-img" />`;
+    } else if (BOARD_CONFIG["red"]["den"] === square.id) {
+      square.innerHTML = `<img src="${IMAGE_LINKS.den}" class="red square-img" />`;
+    }
+  }
+}
+
+// Render river
+function renderRiver() {
+  const squares = document.querySelectorAll(".square");
+  for (const square of squares) {
+    if (BOARD_CONFIG["river"].includes(square.id)) {
+      square.classList.add("river");
+    }
+  }
 }
 
 // Render pieces
-function renderPieces() {}
+function renderPieces() {
+  const animalList = Object.keys(ANIMALS);
+  const squares = document.querySelectorAll(".square");
+
+  for (const square of squares) {
+    if (Object.values(START_POSITION.blue).includes(square.id)) {
+      const animal = getKeyByValue(START_POSITION.blue, square.id);
+      square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece blue-piece" />`;
+    } else if (Object.values(START_POSITION.red).includes(square.id)) {
+      const animal = getKeyByValue(START_POSITION.red, square.id);
+      square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece red-piece" />`;
+    }
+  }
+
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find((key) => object[key] === value);
+  }
+}
 
 // Check board for win
 function checkBoardForWin() {}
