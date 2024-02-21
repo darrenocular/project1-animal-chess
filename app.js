@@ -1,14 +1,6 @@
-// 1) Define required constants
-// 2) Define required variables used to track the state of the game
-// 3) Store elements on the page that will be accessed in code more than once in variables to make code more concise, readable and performant.
-// 4) Upon loading the app should:
-//   4.1) Initialize the state variables
-//   4.2) Render those values to the page
-//   4.3) Wait for the user to click a square
-// 5) Handle a player clicking a square
-// 6) Handle a player clicking the replay button
-
 /*----- CONSTANTS -----*/
+const PLAYERS = ["blue", "red"];
+
 const ANIMALS = {
   elephant: 8,
   lion: 7,
@@ -45,7 +37,7 @@ const BOARD_CONFIG = {
   ],
 };
 
-const START_POSITION = {
+const START_POSITIONS = {
   blue: {
     elephant: "g1",
     lion: "i7",
@@ -82,10 +74,33 @@ const IMAGE_LINKS = {
 };
 
 /*----- STATE VARIABLES -----*/
+const currentPositions = {
+  blue: {
+    elephant: "g1",
+    lion: "i7",
+    tiger: "i1",
+    leopard: "g5",
+    wolf: "g3",
+    dog: "h6",
+    cat: "h2",
+    rat: "g7",
+  },
+  red: {
+    elephant: "c7",
+    lion: "a1",
+    tiger: "a7",
+    leopard: "c3",
+    wolf: "c5",
+    dog: "b2",
+    cat: "b6",
+    rat: "c1",
+  },
+};
 
 /*----- CACHED ELEMENTS -----*/
 const gameboard = document.querySelector("#gameboard");
 const currentPlayerDisplay = document.querySelector("#current-player");
+let currentPlayer;
 
 /*----- FUNCTIONS -----*/
 // Render board
@@ -105,6 +120,11 @@ function renderBoard() {
     // Append each square to gameboard
     gameboard.append(newSquare);
   }
+
+  // Set current player
+  currentPlayer = PLAYERS[0];
+  currentPlayerDisplay.innerText = currentPlayer;
+  currentPlayerDisplay.className = "blue-player";
 
   renderTraps();
   renderDens();
@@ -152,12 +172,12 @@ function renderPieces() {
   const squares = document.querySelectorAll(".square");
 
   for (const square of squares) {
-    if (Object.values(START_POSITION.blue).includes(square.id)) {
-      const animal = getKeyByValue(START_POSITION.blue, square.id);
-      square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece blue-piece" />`;
-    } else if (Object.values(START_POSITION.red).includes(square.id)) {
-      const animal = getKeyByValue(START_POSITION.red, square.id);
-      square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece red-piece" />`;
+    if (Object.values(START_POSITIONS.blue).includes(square.id)) {
+      const animal = getKeyByValue(START_POSITIONS.blue, square.id);
+      square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece blue-piece" data-animal="${animal}" />`;
+    } else if (Object.values(START_POSITIONS.red).includes(square.id)) {
+      const animal = getKeyByValue(START_POSITIONS.red, square.id);
+      square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece red-piece" data-animal="${animal}" />`;
     }
   }
 
@@ -166,9 +186,114 @@ function renderPieces() {
   }
 }
 
+// Handle click
+function handleClick(e) {
+  console.log(e.target);
+
+  // Ensure player can only click their own pieces
+  console.log("Own piece?" + checkOwnPiece(e));
+  if (checkOwnPiece(e)) {
+    console.log(checkAvailableMoves(e));
+  }
+
+  // Update current positions
+}
+
+// Check if own piece
+function checkOwnPiece(e) {
+  if (e.target.tagName === "IMG") {
+    if (
+      Object.values(currentPositions[currentPlayer]).includes(
+        e.target.parentNode.id
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
+}
+
+// Check available moves
+function checkAvailableMoves(e) {
+  const currentAnimal = e.target.dataset.animal;
+  const currentRow = currentPositions[currentPlayer][currentAnimal][0]; // "a"
+  const currentCol = Number(currentPositions[currentPlayer][currentAnimal][1]); // "1"
+  const availableMoves = [];
+
+  // Insert all available rows
+  if (currentRow === "a" && currentCol === 1) {
+    availableMoves.push("a2", "b1");
+  } else if (currentRow === "a" && currentCol === 7) {
+    availableMoves.push("a6", "b7");
+  } else if (currentRow === "i" && currentCol === 1) {
+    availableMoves.push("h1", "i2");
+  } else if (currentRow === "i" && currentCol === 7) {
+    availableMoves.push("h7", "i6");
+  } else if (currentRow === "a") {
+    availableMoves.push(
+      currentRow + String(currentCol - 1),
+      String.fromCharCode(currentRow.charCodeAt(0) + 1) + String(currentCol),
+      currentRow + String(currentCol + 1)
+    );
+  } else if (currentRow === "i") {
+    availableMoves.push(
+      currentRow + String(currentCol - 1),
+      String.fromCharCode(currentRow.charCodeAt(0) - 1) + String(currentCol),
+      currentRow + String(currentCol + 1)
+    );
+  } else if (currentCol === 1) {
+    availableMoves.push(
+      String.fromCharCode(currentRow.charCodeAt(0) - 1) + String(currentCol),
+      currentRow + String(currentCol + 1),
+      String.fromCharCode(currentRow.charCodeAt(0) + 1) + String(currentCol)
+    );
+  } else if (currentCol === 7) {
+    availableMoves.push(
+      String.fromCharCode(currentRow.charCodeAt(0) - 1) + String(currentCol),
+      currentRow + String(currentCol - 1),
+      String.fromCharCode(currentRow.charCodeAt(0) + 1) + String(currentCol)
+    );
+  } else {
+    availableMoves.push(
+      String.fromCharCode(currentRow.charCodeAt(0) - 1) + String(currentCol),
+      currentRow + String(currentCol + 1),
+      String.fromCharCode(currentRow.charCodeAt(0) + 1) + String(currentCol),
+      currentRow + String(currentCol - 1)
+    );
+  }
+
+  // Check if same piece occupying availableMoves
+
+  // Check if availableMoves contains river
+
+  // Program special moves for lion, tiger and rat regarding river
+
+  // Return available moves
+  return availableMoves;
+}
+
+// Highlight available moves
+function highlightAvailableMoves(arr) {}
+
 // Check board for win
 function checkBoardForWin() {}
 
+// Toggle current player display
+function toggleCurrentPlayer() {
+  if (currentPlayer === PLAYERS[0]) {
+    currentPlayer = PLAYERS[1];
+    currentPlayerDisplay.innerHTML = currentPlayer;
+    currentPlayerDisplay.className = "red-player";
+  } else {
+    currentPlayer = PLAYERS[0];
+    currentPlayerDisplay.innerHTML = currentPlayer;
+    currentPlayerDisplay.className = "blue-player";
+  }
+}
+
+// Toggle rules
 function toggleRules() {
   const rulesPopup = document.querySelector("#rules");
 
@@ -195,3 +320,8 @@ document
 document
   .querySelector(".restart-btn")
   .addEventListener("DOMContentLoaded", renderBoard);
+
+// When piece is clicked
+document
+  .querySelector("#gameboard")
+  .addEventListener("click", (e) => handleClick(e));
