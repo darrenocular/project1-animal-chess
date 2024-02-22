@@ -189,15 +189,26 @@ function renderPieces() {
 // Handle click
 function handleClick(e) {
   console.log(e.target);
+  const squares = document.querySelectorAll(".square");
+
+  // Remove all highlights (if any)
+  for (const square of squares) {
+    square.style.removeProperty("background-color");
+  }
 
   // Ensure player can only click their own pieces
-  console.log("Own piece?" + checkOwnPiece(e));
+  console.log("Own piece? " + checkOwnPiece(e));
   if (checkOwnPiece(e)) {
     const availableMoves = checkAvailableMoves(e);
     console.log(availableMoves);
     highlightAvailableMoves(availableMoves);
   }
+}
 
+// Handle move
+function handleMove(e) {
+  // Move piece
+  console.log("I am moving");
   // Update current positions
 }
 
@@ -222,7 +233,7 @@ function checkAvailableMoves(e) {
   const currentAnimal = e.target.dataset.animal;
   const currentRow = currentPositions[currentPlayer][currentAnimal][0]; // "a"
   const currentCol = Number(currentPositions[currentPlayer][currentAnimal][1]); // "1"
-  const availableMoves = [];
+  let availableMoves = [];
 
   // Insert all available rows
   if (currentRow === "a" && currentCol === 1) {
@@ -265,12 +276,121 @@ function checkAvailableMoves(e) {
       currentRow + String(currentCol - 1)
     );
   }
+  console.log(availableMoves);
 
-  // Check if same piece occupying availableMoves
+  // Check if own piece occupying availableMoves
+  availableMoves = availableMoves.filter(
+    (move) => !Object.values(currentPositions[currentPlayer]).includes(move)
+  );
+  console.log(availableMoves);
 
   // Check if availableMoves contains river
+  // If not rat, remove river squares from availableMoves
+  if (currentAnimal !== "rat") {
+    const river = BOARD_CONFIG.river;
 
-  // Program special moves for lion, tiger and rat regarding river
+    availableMoves = availableMoves.filter((move) => !river.includes(move));
+    // If lion or tiger, add available squares to jump to to availableMoves
+    if (currentAnimal === "lion" || currentAnimal === "tiger") {
+      availableMoves = [
+        ...availableMoves,
+        ...availableJumps(currentRow, currentCol), // if not by river, should be []
+      ];
+    }
+  }
+  console.log(availableMoves);
+
+  //   Filter out opponent pieces that cannot be captured from availableMoves
+  availableMoves = availableMoves.filter((move) => {
+    const moveSquare = document.querySelector(`#${move}`);
+    console.log(moveSquare);
+    if (
+      moveSquare.hasChildNodes() &&
+      moveSquare.firstElementChild.classList.contains("piece")
+    ) {
+      const opponentAnimal = moveSquare.firstElementChild.dataset.animal;
+      if (currentAnimal === "rat" && opponentAnimal === "elephant") {
+        return true;
+      } else {
+        return ANIMALS[currentAnimal] >= ANIMALS[opponentAnimal] ? true : false;
+      }
+    } else {
+      return true;
+    }
+  });
+  console.log(availableMoves);
+
+  // Rat cannot kill from river
+  if (e.target.parentElement.classList.contains("river")) {
+    availableMoves = availableMoves.filter((move) => {
+      const moveSquare = document.querySelector(`#${move}`);
+      if (
+        moveSquare.hasChildNodes() &&
+        moveSquare.firstElementChild.classList.contains("piece")
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
+
+  // Obtain array of available squares to jump to
+  function availableJumps(row, col) {
+    const availableJumps = [];
+    const ratPositions = [currentPositions.blue.rat, currentPositions.red.rat];
+
+    // Vertical jumps
+    if (![1, 4, 7].includes(col)) {
+      // Check if rat in intervening vertical squares
+      for (const position of ratPositions) {
+        if (position[1] == col && ["d", "e", "f"].includes(position[0])) {
+          return availableJumps;
+        }
+      }
+
+      switch (row) {
+        case "c":
+          availableJumps.push("g" + String(col));
+          break;
+        case "g":
+          availableJumps.push("c" + String(col));
+          break;
+      }
+    }
+
+    // Horizontal jumps
+    if (["d", "e", "f"].includes(row)) {
+      switch (col) {
+        case 1:
+          for (const position of ratPositions) {
+            if (position[0] === row && [2, 3].includes(Number(position[1]))) {
+              return availableJumps;
+            }
+          }
+          availableJumps.push(row + "4");
+          break;
+        case 7:
+          // Check if rat in intervening horizontal squares
+          for (const position of ratPositions) {
+            if (position[0] === row && [5, 6].includes(Number(position[1]))) {
+              return availableJumps;
+            }
+          }
+          availableJumps.push(row + "4");
+          break;
+        case 4:
+          for (const position of ratPositions) {
+            if (position[0] === row && [2, 3, 5, 6].includes(col)) {
+              return availableJumps;
+            }
+          }
+          availableJumps.push(row + "1", row + "7");
+          break;
+      }
+    }
+    return availableJumps;
+  }
 
   // Return available moves
   return availableMoves;
@@ -281,10 +401,13 @@ function highlightAvailableMoves(arr) {
   const squares = document.querySelectorAll(".square");
   for (const square of squares) {
     if (arr.includes(square.id)) {
+      square.classList.add("highlight");
       square.style.backgroundColor = "rgb(255, 255, 110)";
     }
   }
 }
+
+// Change power (if enter den)
 
 // Check board for win
 function checkBoardForWin() {}
@@ -334,3 +457,8 @@ document
 document
   .querySelector("#gameboard")
   .addEventListener("click", (e) => handleClick(e));
+
+// To move clicked piece
+document.querySelector("#gameboard").addEventListener("click", (e) => {
+  if (e.target.classList.contains("highlight")) handleMove(e);
+});
