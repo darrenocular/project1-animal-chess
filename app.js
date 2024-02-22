@@ -101,6 +101,7 @@ const currentPositions = {
 const gameboard = document.querySelector("#gameboard");
 const currentPlayerDisplay = document.querySelector("#current-player");
 let currentPlayer;
+let winner;
 
 /*----- FUNCTIONS -----*/
 // Render board
@@ -180,10 +181,6 @@ function renderPieces() {
       square.innerHTML = `<img src="${IMAGE_LINKS[animal]}" class="piece red-piece" data-animal="${animal}" />`;
     }
   }
-
-  function getKeyByValue(object, value) {
-    return Object.keys(object).find((key) => object[key] === value);
-  }
 }
 
 // Handle click
@@ -210,6 +207,14 @@ function handleMove(e) {
   // Move piece
   console.log("I am moving");
   // Update current positions
+
+  // Check if winner
+  let winner = checkBoardForWin();
+  if (winner) {
+    handleWin();
+  } else {
+    toggleCurrentPlayer();
+  }
 }
 
 // Check if own piece
@@ -412,10 +417,31 @@ function highlightAvailableMoves(arr) {
   }
 }
 
-// Change power (if enter den)
+// Reduce power (if enter opponent's trap)
+function enterTrap() {
+  let opponentTraps;
+
+  if (currentPlayer === "blue") {
+    opponentTraps = BOARD_CONFIG.red.trap;
+  } else {
+    opponentTraps = BOARD_CONFIG.blue.trap;
+  }
+
+  for (const position of Object.values(currentPositions[currentPlayer])) {
+    if (opponentTraps.includes(position)) {
+    }
+  }
+}
 
 // Check board for win
-function checkBoardForWin() {}
+function checkBoardForWin() {
+  if (
+    Object.values(currentPositions.blue).includes("a4") ||
+    Object.values(currentPositions.red).includes("i4")
+  ) {
+    return currentPlayer;
+  }
+}
 
 // Toggle current player display
 function toggleCurrentPlayer() {
@@ -441,6 +467,19 @@ function toggleRules() {
   } else {
     rulesPopup.hidden = true;
   }
+}
+
+// Handle win
+function handleWin() {
+  document.querySelector(
+    "#info-panel"
+  ).innerHTML = `<h2>Congratulations! <span class="${currentPlayer}-player" id="current-player">${currentPlayer}</span> has won! 🎉</h2>`;
+  gameboard.style.pointerEvents = "none";
+}
+
+// Get key by value (reusable)
+function getKeyByValue(object, value) {
+  return Object.keys(object).find((key) => object[key] === value);
 }
 
 /*----- EVENT LISTENERS -----*/
