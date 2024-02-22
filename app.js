@@ -164,9 +164,9 @@ function renderTraps() {
   const squares = document.querySelectorAll(".square");
   for (const square of squares) {
     if (BOARD_CONFIG["blue"]["trap"].includes(square.id)) {
-      square.innerHTML = `<img src="${IMAGE_LINKS.trap}" class="blue square-img" />`;
+      square.innerHTML = `<img src="${IMAGE_LINKS.trap}" class="blue square-img trap" />`;
     } else if (BOARD_CONFIG["red"]["trap"].includes(square.id)) {
-      square.innerHTML = `<img src="${IMAGE_LINKS.trap}" class="red square-img" />`;
+      square.innerHTML = `<img src="${IMAGE_LINKS.trap}" class="red square-img trap" />`;
     }
   }
 }
@@ -176,9 +176,9 @@ function renderDens() {
   const squares = document.querySelectorAll(".square");
   for (const square of squares) {
     if (BOARD_CONFIG["blue"]["den"] === square.id) {
-      square.innerHTML = `<img src="${IMAGE_LINKS.den}" class="blue square-img" />`;
+      square.innerHTML = `<img src="${IMAGE_LINKS.den}" class="blue square-img den" />`;
     } else if (BOARD_CONFIG["red"]["den"] === square.id) {
-      square.innerHTML = `<img src="${IMAGE_LINKS.den}" class="red square-img" />`;
+      square.innerHTML = `<img src="${IMAGE_LINKS.den}" class="red square-img den" />`;
     }
   }
 }
@@ -215,6 +215,7 @@ function handleClick(e) {
   // Remove all highlights (if any)
   for (const square of squares) {
     square.style.removeProperty("background-color");
+    square.classList.remove("highlight");
   }
 
   // Ensure player can only click their own pieces
@@ -234,20 +235,32 @@ function handleMove(e) {
   const destinationSquareId = e.target.id || e.target.parentElement.id;
   const destinationSquare = e.target || e.target.parentElement;
 
-  if (
-    destinationSquare.hasChildNodes() &&
-    destinationSquare.firstElementChild.classList.contains("piece")
-  ) {
-    const opponentPiece = destinationSquare.firstElementChild;
-    const opponentPanel = document.querySelector(
-      `.${opponent}-player.player-panel`
-    );
-    opponentPanel.append(opponentPiece);
-    destinationSquare.append(currentPiece);
+  if (destinationSquare.hasChildNodes()) {
+    if (destinationSquare.firstElementChild.classList.contains("piece")) {
+      const opponentPiece = destinationSquare.firstElementChild;
+      const opponentPanel = document.querySelector(
+        `.${opponent}-player.player-panel`
+      );
+      opponentPanel.append(opponentPiece);
+      destinationSquare.append(currentPiece);
 
-    // Update current position of opponent piece that was eaten
-    currentPositions[opponent][opponentPiece.dataset.animal] = "";
+      // Update current position of opponent piece that was eaten
+      currentPositions[opponent][opponentPiece.dataset.animal] = "";
+    } else if (
+      destinationSquare.firstElementChild.classList.contains("den") ||
+      destinationSquare.firstElementChild.classList.contains("trap")
+    ) {
+      destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
+      destinationSquare.append(currentPiece);
+    }
   } else {
+    // If exiting from trap
+    if (
+      currentPiece.parentElement.firstElementChild.classList.contains("trap")
+    ) {
+      currentPiece.parentElement.firstElementChild.style.display =
+        "inline-block";
+    }
     destinationSquare.append(currentPiece);
   }
 
@@ -255,6 +268,7 @@ function handleMove(e) {
   const squares = document.querySelectorAll(".square");
   for (const square of squares) {
     square.style.removeProperty("background-color");
+    square.classList.remove("highlight");
   }
 
   // Update current position of player piece
@@ -262,7 +276,12 @@ function handleMove(e) {
     destinationSquareId;
 
   // Check if current player's animal moved into opponent's traps
-  checkTrap();
+  if (checkTrap()) {
+    currentAnimalsPower[currentPlayer][currentPiece.dataset.animal] = 0;
+  } else {
+    currentAnimalsPower[currentPlayer][currentPiece.dataset.animal] =
+      ANIMAL_POWERS[currentPiece.dataset.animal];
+  }
   console.log(currentAnimalsPower[currentPlayer]);
 
   // Check if winner
@@ -278,12 +297,7 @@ function handleMove(e) {
     const opponentTraps = BOARD_CONFIG[opponent].trap;
 
     for (const position of Object.values(currentPositions[currentPlayer])) {
-      const animal = getKeyByValue(currentPositions[currentPlayer], position);
-      if (opponentTraps.includes(position)) {
-        currentAnimalsPower[currentPlayer][animal] = 0;
-      } else {
-        currentAnimalsPower[currentPlayer][animal] = ANIMAL_POWERS[animal];
-      }
+      return opponentTraps.includes(position) ? true : false;
     }
   }
 }
@@ -388,6 +402,10 @@ function checkAvailableMoves(e) {
       const opponentAnimal = moveSquare.firstElementChild.dataset.animal;
       if (currentAnimal === "rat" && opponentAnimal === "elephant") {
         return true;
+      } else if (currentAnimal === "rat" && opponentAnimal === "rat") {
+        return true;
+      } else if (currentAnimal === "elephant" && opponentAnimal === "rat") {
+        return false;
       } else {
         return currentAnimalsPower[currentPlayer][currentAnimal] >=
           currentAnimalsPower[opponent][opponentAnimal]
@@ -405,7 +423,8 @@ function checkAvailableMoves(e) {
       const moveSquare = document.querySelector(`#${move}`);
       if (
         moveSquare.hasChildNodes() &&
-        moveSquare.firstElementChild.classList.contains("piece")
+        moveSquare.firstElementChild.classList.contains("piece") &&
+        moveSquare.firstElementChild.dataset.animal !== "rat"
       ) {
         return false;
       } else {
@@ -460,7 +479,10 @@ function checkAvailableMoves(e) {
           break;
         case 4:
           for (const position of ratPositions) {
-            if (position[0] === row && [2, 3, 5, 6].includes(col)) {
+            if (
+              position[0] === row &&
+              [2, 3, 5, 6].includes(Number(position[1]))
+            ) {
               return availableJumps;
             }
           }
@@ -559,5 +581,9 @@ document.querySelector("#gameboard").addEventListener("click", (e) => {
 
 // To move clicked piece
 document.querySelector("#gameboard").addEventListener("click", (e) => {
-  if (e.target.classList.contains("highlight")) handleMove(e);
+  if (
+    e.target.classList.contains("highlight") ||
+    e.target.parentElement.classList.contains("highlight")
+  )
+    handleMove(e);
 });

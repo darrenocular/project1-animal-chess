@@ -68,6 +68,10 @@ button:hover {
   height: 64px;
 }
 
+.highlight:hover {
+  cursor: pointer;
+}
+
 /*----- PIECES -----*/
 .piece {
   width: 64px;
@@ -109,6 +113,11 @@ button:hover {
   width: 10%;
   min-width: 120px;
   margin: 24px 0;
+}
+
+.player-panel > h3,
+img {
+  margin-bottom: 8px;
 }
 
 /*----- RULES POP-UP -----*/
