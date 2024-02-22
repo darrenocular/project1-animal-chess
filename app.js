@@ -233,7 +233,7 @@ function handleMove(e) {
   // Move piece
   let destinationSquareId;
   let destinationSquare;
-  if (e.target.classList.contains("piece")) {
+  if (e.target.tagName === "IMG") {
     destinationSquare = e.target.parentElement;
     destinationSquareId = e.target.parentElement.id;
   } else {
