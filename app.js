@@ -231,9 +231,15 @@ function handleClick(e) {
 // Handle move
 function handleMove(e) {
   // Move piece
-  // "||" in case destination piece contains opponent piece (img)
-  const destinationSquareId = e.target.id || e.target.parentElement.id;
-  const destinationSquare = e.target || e.target.parentElement;
+  let destinationSquareId;
+  let destinationSquare;
+  if (e.target.classList.contains("piece")) {
+    destinationSquare = e.target.parentElement;
+    destinationSquareId = e.target.parentElement.id;
+  } else {
+    destinationSquare = e.target;
+    destinationSquareId = e.target.id;
+  }
 
   if (destinationSquare.hasChildNodes()) {
     // Opponent piece not in den
@@ -593,7 +599,11 @@ document
 
 // Handle clicks
 document.querySelector("#gameboard").addEventListener("click", (e) => {
-  if (!e.target.classList.contains("highlight")) handleClick(e);
+  if (
+    !e.target.classList.contains("highlight") &&
+    !e.target.parentElement.classList.contains("highlight")
+  )
+    handleClick(e);
 });
 
 // To move clicked piece
