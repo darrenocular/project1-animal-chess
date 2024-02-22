@@ -1,7 +1,7 @@
 /*----- CONSTANTS -----*/
 const PLAYERS = ["blue", "red"];
 
-const ANIMALS = {
+const ANIMAL_POWERS = {
   elephant: 8,
   lion: 7,
   tiger: 6,
@@ -97,10 +97,35 @@ const currentPositions = {
   },
 };
 
+const currentAnimalsPower = {
+  blue: {
+    elephant: 8,
+    lion: 7,
+    tiger: 6,
+    leopard: 5,
+    wolf: 4,
+    dog: 3,
+    cat: 2,
+    rat: 1,
+  },
+  red: {
+    elephant: 8,
+    lion: 7,
+    tiger: 6,
+    leopard: 5,
+    wolf: 4,
+    dog: 3,
+    cat: 2,
+    rat: 1,
+  },
+};
+
 /*----- CACHED ELEMENTS -----*/
 const gameboard = document.querySelector("#gameboard");
 const currentPlayerDisplay = document.querySelector("#current-player");
 let currentPlayer;
+let currentPiece;
+let opponent;
 let winner;
 
 /*----- FUNCTIONS -----*/
@@ -124,6 +149,7 @@ function renderBoard() {
 
   // Set current player
   currentPlayer = PLAYERS[0];
+  opponent = PLAYERS[1];
   currentPlayerDisplay.innerText = currentPlayer;
   currentPlayerDisplay.className = "blue-player";
 
@@ -169,7 +195,6 @@ function renderRiver() {
 
 // Render pieces
 function renderPieces() {
-  const animalList = Object.keys(ANIMALS);
   const squares = document.querySelectorAll(".square");
 
   for (const square of squares) {
@@ -185,7 +210,6 @@ function renderPieces() {
 
 // Handle click
 function handleClick(e) {
-  console.log(e.target);
   const squares = document.querySelectorAll(".square");
 
   // Remove all highlights (if any)
@@ -194,19 +218,52 @@ function handleClick(e) {
   }
 
   // Ensure player can only click their own pieces
-  console.log("Own piece? " + checkOwnPiece(e));
   if (checkOwnPiece(e)) {
     const availableMoves = checkAvailableMoves(e);
-    console.log(availableMoves);
     highlightAvailableMoves(availableMoves);
   }
+
+  // To be used for handleMove() below
+  currentPiece = e.target;
 }
 
 // Handle move
 function handleMove(e) {
   // Move piece
-  console.log("I am moving");
-  // Update current positions
+  // "||" in case destination piece contains opponent piece (img)
+  const destinationSquareId = e.target.id || e.target.parentElement.id;
+  const destinationSquare = e.target || e.target.parentElement;
+
+  if (
+    destinationSquare.hasChildNodes() &&
+    destinationSquare.firstElementChild.classList.contains("piece")
+  ) {
+    const opponentPiece = destinationSquare.firstElementChild;
+    const opponentPanel = document.querySelector(
+      `.${opponent}-player.player-panel`
+    );
+    opponentPanel.append(opponentPiece);
+    destinationSquare.append(currentPiece);
+
+    // Update current position of opponent piece that was eaten
+    currentPositions[opponent][opponentPiece.dataset.animal] = "";
+  } else {
+    destinationSquare.append(currentPiece);
+  }
+
+  // Clear highlighted squares
+  const squares = document.querySelectorAll(".square");
+  for (const square of squares) {
+    square.style.removeProperty("background-color");
+  }
+
+  // Update current position of player piece
+  currentPositions[currentPlayer][currentPiece.dataset.animal] =
+    destinationSquareId;
+
+  // Check if current player's animal moved into opponent's traps
+  checkTrap();
+  console.log(currentAnimalsPower[currentPlayer]);
 
   // Check if winner
   let winner = checkBoardForWin();
@@ -214,6 +271,20 @@ function handleMove(e) {
     handleWin();
   } else {
     toggleCurrentPlayer();
+  }
+
+  // Reduce power (if enter opponent's trap)
+  function checkTrap() {
+    const opponentTraps = BOARD_CONFIG[opponent].trap;
+
+    for (const position of Object.values(currentPositions[currentPlayer])) {
+      const animal = getKeyByValue(currentPositions[currentPlayer], position);
+      if (opponentTraps.includes(position)) {
+        currentAnimalsPower[currentPlayer][animal] = 0;
+      } else {
+        currentAnimalsPower[currentPlayer][animal] = ANIMAL_POWERS[animal];
+      }
+    }
   }
 }
 
@@ -281,13 +352,11 @@ function checkAvailableMoves(e) {
       currentRow + String(currentCol - 1)
     );
   }
-  console.log(availableMoves);
 
   // Check if own piece occupying availableMoves
   availableMoves = availableMoves.filter(
     (move) => !Object.values(currentPositions[currentPlayer]).includes(move)
   );
-  console.log(availableMoves);
 
   // Check if availableMoves contains river
   // If not rat, remove river squares from availableMoves
@@ -303,7 +372,6 @@ function checkAvailableMoves(e) {
       ];
     }
   }
-  console.log(availableMoves);
 
   // Check if availableMoves contains den of current player
   availableMoves = availableMoves.filter(
@@ -313,7 +381,6 @@ function checkAvailableMoves(e) {
   //   Filter out opponent pieces that cannot be captured from availableMoves
   availableMoves = availableMoves.filter((move) => {
     const moveSquare = document.querySelector(`#${move}`);
-    console.log(moveSquare);
     if (
       moveSquare.hasChildNodes() &&
       moveSquare.firstElementChild.classList.contains("piece")
@@ -322,13 +389,15 @@ function checkAvailableMoves(e) {
       if (currentAnimal === "rat" && opponentAnimal === "elephant") {
         return true;
       } else {
-        return ANIMALS[currentAnimal] >= ANIMALS[opponentAnimal] ? true : false;
+        return currentAnimalsPower[currentPlayer][currentAnimal] >=
+          currentAnimalsPower[opponent][opponentAnimal]
+          ? true
+          : false;
       }
     } else {
       return true;
     }
   });
-  console.log(availableMoves);
 
   // Rat cannot kill from river
   if (e.target.parentElement.classList.contains("river")) {
@@ -417,22 +486,6 @@ function highlightAvailableMoves(arr) {
   }
 }
 
-// Reduce power (if enter opponent's trap)
-function enterTrap() {
-  let opponentTraps;
-
-  if (currentPlayer === "blue") {
-    opponentTraps = BOARD_CONFIG.red.trap;
-  } else {
-    opponentTraps = BOARD_CONFIG.blue.trap;
-  }
-
-  for (const position of Object.values(currentPositions[currentPlayer])) {
-    if (opponentTraps.includes(position)) {
-    }
-  }
-}
-
 // Check board for win
 function checkBoardForWin() {
   if (
@@ -447,10 +500,12 @@ function checkBoardForWin() {
 function toggleCurrentPlayer() {
   if (currentPlayer === PLAYERS[0]) {
     currentPlayer = PLAYERS[1];
+    opponent = PLAYERS[0];
     currentPlayerDisplay.innerHTML = currentPlayer;
     currentPlayerDisplay.className = "red-player";
   } else {
     currentPlayer = PLAYERS[0];
+    opponent = PLAYERS[1];
     currentPlayerDisplay.innerHTML = currentPlayer;
     currentPlayerDisplay.className = "blue-player";
   }
@@ -497,10 +552,10 @@ document
   .querySelector(".restart-btn")
   .addEventListener("DOMContentLoaded", renderBoard);
 
-// When piece is clicked
-document
-  .querySelector("#gameboard")
-  .addEventListener("click", (e) => handleClick(e));
+// Handle clicks
+document.querySelector("#gameboard").addEventListener("click", (e) => {
+  if (!e.target.classList.contains("highlight")) handleClick(e);
+});
 
 // To move clicked piece
 document.querySelector("#gameboard").addEventListener("click", (e) => {
