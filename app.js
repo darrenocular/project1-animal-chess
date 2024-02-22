@@ -235,7 +235,7 @@ function checkAvailableMoves(e) {
   const currentCol = Number(currentPositions[currentPlayer][currentAnimal][1]); // "1"
   let availableMoves = [];
 
-  // Insert all available rows
+  // Insert all availableMoves
   if (currentRow === "a" && currentCol === 1) {
     availableMoves.push("a2", "b1");
   } else if (currentRow === "a" && currentCol === 7) {
@@ -299,6 +299,11 @@ function checkAvailableMoves(e) {
     }
   }
   console.log(availableMoves);
+
+  // Check if availableMoves contains den of current player
+  availableMoves = availableMoves.filter(
+    (move) => move !== BOARD_CONFIG[currentPlayer].den
+  );
 
   //   Filter out opponent pieces that cannot be captured from availableMoves
   availableMoves = availableMoves.filter((move) => {
