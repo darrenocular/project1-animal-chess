@@ -236,6 +236,7 @@ function handleMove(e) {
   const destinationSquare = e.target || e.target.parentElement;
 
   if (destinationSquare.hasChildNodes()) {
+    // Opponent piece not in den
     if (destinationSquare.firstElementChild.classList.contains("piece")) {
       const opponentPiece = destinationSquare.firstElementChild;
       const opponentPanel = document.querySelector(
@@ -250,8 +251,22 @@ function handleMove(e) {
       destinationSquare.firstElementChild.classList.contains("den") ||
       destinationSquare.firstElementChild.classList.contains("trap")
     ) {
-      destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
-      destinationSquare.append(currentPiece);
+      // Opponent piece in trap
+      if (destinationSquare.children.length > 1) {
+        const opponentPiece = destinationSquare.children[1];
+        const opponentPanel = document.querySelector(
+          `.${opponent}-player.player-panel`
+        );
+        opponentPanel.append(opponentPiece);
+        destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
+        destinationSquare.append(currentPiece);
+
+        // Update current position of opponent piece that was eaten
+        currentPositions[opponent][opponentPiece.dataset.animal] = "";
+      } else {
+        destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
+        destinationSquare.append(currentPiece);
+      }
     }
   } else {
     // If exiting from trap
@@ -282,7 +297,6 @@ function handleMove(e) {
     currentAnimalsPower[currentPlayer][currentPiece.dataset.animal] =
       ANIMAL_POWERS[currentPiece.dataset.animal];
   }
-  console.log(currentAnimalsPower[currentPlayer]);
 
   // Check if winner
   let winner = checkBoardForWin();
@@ -297,8 +311,11 @@ function handleMove(e) {
     const opponentTraps = BOARD_CONFIG[opponent].trap;
 
     for (const position of Object.values(currentPositions[currentPlayer])) {
-      return opponentTraps.includes(position) ? true : false;
+      if (opponentTraps.includes(position)) {
+        return true;
+      }
     }
+    return false;
   }
 }
 
