@@ -193,7 +193,9 @@ function handleClick(e) {
   // Ensure player can only click their own pieces
   console.log("Own piece?" + checkOwnPiece(e));
   if (checkOwnPiece(e)) {
-    console.log(checkAvailableMoves(e));
+    const availableMoves = checkAvailableMoves(e);
+    console.log(availableMoves);
+    highlightAvailableMoves(availableMoves);
   }
 
   // Update current positions
@@ -275,7 +277,14 @@ function checkAvailableMoves(e) {
 }
 
 // Highlight available moves
-function highlightAvailableMoves(arr) {}
+function highlightAvailableMoves(arr) {
+  const squares = document.querySelectorAll(".square");
+  for (const square of squares) {
+    if (arr.includes(square.id)) {
+      square.style.backgroundColor = "rgb(255, 255, 110)";
+    }
+  }
+}
 
 // Check board for win
 function checkBoardForWin() {}
