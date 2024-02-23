@@ -271,6 +271,8 @@ function handleMove(e) {
         currentPositions[opponent][opponentPiece.dataset.animal] = "";
       } else {
         destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
+        currentPiece.parentElement.firstElementChild.style.display =
+          "inline-block";
         destinationSquare.append(currentPiece);
       }
     }
