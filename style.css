@@ -121,9 +121,13 @@ button:hover {
   margin: 24px 0;
 }
 
-.player-panel > h3,
-img {
+.player-panel > h3 {
   margin-bottom: 8px;
+}
+
+.player-panel > img {
+  display: block;
+  margin: 8px auto;
 }
 
 /*----- RULES POP-UP -----*/

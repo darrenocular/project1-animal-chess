@@ -22,13 +22,9 @@ To win, you have to manouevre one of your animal pieces into the opponent's "den
 
 The origins of the game is _unknown_ but legend has it that it descended upon our shores through the kids of our Chinese forefathers.
 
-## Technology
+## Basic Rules
 
-HTML, CSS and JavaScript
-
-## Gameplay
-
-At the start of your turn, you may either _move_ an animal piece **and/or** capture an opponent's piece.
+At the start of your turn, you may either **move** an animal piece **and/or** **capture** an opponent's piece.
 
 ### Moving a piece
 
@@ -48,9 +44,42 @@ At the start of your turn, you may either _move_ an animal piece **and/or** capt
   - As the rat is the only animal that can enter the river, it cannot be captured by any piece from land. A rat in the water can _only_ be captured by the opponent's rat **in the water**.
 - A captured piece is **removed** from the gameboard.
 
+## Technology
+
+HTML, CSS and JavaScript
+
+## Gameplay
+
+The gameboard looks like this:
+
+![gameboard](assets/screenshots/gameboard_initial.png)
+
+The status bar above the gameboard will indicate which player's turn it is to move.
+
+When it is your turn, you may only click on your own pieces. When you click on any of your pieces, the moves available to said piece will be highlighted in yellow:
+
+![highlight1](assets/screenshots/gameboard_highlight1.png) ![highlight2](assets/screenshots/gameboard_highlight2.png) ![highlight3](assets/screenshots/gameboard_highlight3.png)
+
+You may click on any of the highlighted squares to move your piece:
+
+![move](assets/screenshots/move_piece.gif)
+
+Each player will have a display panel on either side of the gameboard. When a player's piece is captured, it will be displayed on the player's display panel:
+
+![capture](assets/screenshots/capture_piece.gif)
+
+The lion and the tiger can jump across a river but not when there is a rat (of either color) in an intervening water square:
+
+![jump](assets/screenshots/jump.gif)
+
+When a player moves his/her piece into the opponent's den, the player wins and the status bar will state which player has won:
+
+![win](assets/screenshots/win.gif)
+
 ## Next Steps (Icebox)
 
 - Implement feature that rotates the gameboard when player turn shifts (enhance player experience)
+- Allow players to undo moves to study their play
 - Allow players to play with variations included in the game to reduce the probability of ties (see variations [here](<https://en.wikipedia.org/wiki/Jungle_(board_game)#:~:text=opponent%27s%20trap%20square.-,Minor%20variations,-%5Bedit%5D>))
 
 ## References
