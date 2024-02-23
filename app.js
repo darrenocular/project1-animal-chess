@@ -562,9 +562,22 @@ function toggleCurrentPlayer() {
 function toggleRules() {
   const rulesPopup = document.querySelector("#rules");
 
-  if (rulesPopup.hidden === true) {
-    rulesPopup.hidden = false;
-  } else {
+  setTimeout(() => {
+    if (rulesPopup.hidden === true) {
+      rulesPopup.hidden = false;
+    } else {
+      rulesPopup.hidden = true;
+    }
+  }, 50); // Ensures closeRules runs first before toggleRules when button is clicked
+}
+
+// Close rules
+function closeRules(e) {
+  const isClosest = e.target.closest("#rules");
+  const rulesPopup = document.querySelector("#rules");
+  console.log(isClosest);
+
+  if (!isClosest && !rulesPopup.hidden) {
     rulesPopup.hidden = true;
   }
 }
@@ -591,6 +604,7 @@ document.querySelector(".rules-btn").addEventListener("click", toggleRules);
 document
   .querySelector("#rules-header > button")
   .addEventListener("click", toggleRules);
+document.addEventListener("click", (e) => closeRules(e)); // Close popup if click outside of popup
 
 // Start new game
 document

@@ -139,11 +139,21 @@ table {
   margin: 0 auto;
 }
 
+td,
+th {
+  width: 120px;
+}
+
+th {
+  padding-bottom: 8px;
+}
+
 #rules {
   background-color: white;
   height: 80vh;
   overflow: auto;
   margin-bottom: 24px;
+  padding-bottom: 16px;
   animation: fadeIn 0.5s;
 }
 
