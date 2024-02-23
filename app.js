@@ -565,8 +565,10 @@ function toggleRules() {
   setTimeout(() => {
     if (rulesPopup.hidden === true) {
       rulesPopup.hidden = false;
+      document.body.style.overflow = "hidden";
     } else {
       rulesPopup.hidden = true;
+      document.body.style.overflow = "auto";
     }
   }, 50); // Ensures closeRules runs first before toggleRules when button is clicked
 }
@@ -575,10 +577,14 @@ function toggleRules() {
 function closeRules(e) {
   const isClosest = e.target.closest("#rules");
   const rulesPopup = document.querySelector("#rules");
-  console.log(isClosest);
 
-  if (!isClosest && !rulesPopup.hidden) {
+  if (
+    !isClosest &&
+    !rulesPopup.hidden &&
+    e.target !== document.querySelector(".rules-btn")
+  ) {
     rulesPopup.hidden = true;
+    document.body.style.overflow = "auto";
   }
 }
 
