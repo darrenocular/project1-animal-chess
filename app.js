@@ -61,16 +61,16 @@ const START_POSITIONS = {
 };
 
 const IMAGE_LINKS = {
-  trap: "assets/trap.png",
-  den: "assets/den.png",
-  elephant: "assets/elephant.png",
-  lion: "assets/lion.png",
-  tiger: "assets/tiger.png",
-  leopard: "assets/leopard.png",
-  wolf: "assets/wolf.png",
-  dog: "assets/dog.png",
-  cat: "assets/cat.png",
-  rat: "assets/rat.png",
+  trap: "./assets/trap.png",
+  den: "./assets/den.png",
+  elephant: "./assets/elephant.png",
+  lion: "./assets/lion.png",
+  tiger: "./assets/tiger.png",
+  leopard: "./assets/leopard.png",
+  wolf: "./assets/wolf.png",
+  dog: "./assets/dog.png",
+  cat: "./assets/cat.png",
+  rat: "./assets/rat.png",
 };
 
 /*----- STATE VARIABLES -----*/

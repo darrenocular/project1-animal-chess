@@ -22,6 +22,8 @@ To win, you have to manouevre one of your animal pieces into the opponent's "den
 
 The origins of the game is _unknown_ but legend has it that it descended upon our shores through the kids of our Chinese forefathers.
 
+Play game here: https://darrenocular.github.io/project1-animal-chess/
+
 ## Basic Rules
 
 At the start of your turn, you may either **move** an animal piece **and/or** **capture** an opponent's piece.
