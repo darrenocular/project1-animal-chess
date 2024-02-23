@@ -94,6 +94,11 @@ button:hover {
   background-color: rgb(200, 0, 0);
 }
 
+.black-piece {
+  border: 4px solid black;
+  background-color: black;
+}
+
 /*----- INFO PANEL -----*/
 #current-player {
   text-transform: capitalize;
@@ -128,6 +133,10 @@ div.fixed {
   transform: translateX(-50%);
   width: 80vw;
   border: 3px solid black;
+}
+
+table {
+  margin: 0 auto;
 }
 
 #rules {
@@ -200,5 +209,14 @@ ul {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

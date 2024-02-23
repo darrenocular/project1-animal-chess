@@ -535,7 +535,9 @@ function highlightAvailableMoves(arr) {
 function checkBoardForWin() {
   if (
     Object.values(currentPositions.blue).includes("a4") ||
-    Object.values(currentPositions.red).includes("i4")
+    Object.values(currentPositions.red).includes("i4") ||
+    Object.values(currentPositions.blue).every((position) => position === "") ||
+    Object.values(currentPositions.red).every((position) => position === "")
   ) {
     return currentPlayer;
   }
@@ -562,8 +564,6 @@ function toggleRules() {
 
   if (rulesPopup.hidden === true) {
     rulesPopup.hidden = false;
-
-    // Fade out and disable surrounding elements
   } else {
     rulesPopup.hidden = true;
   }
