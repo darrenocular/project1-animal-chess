@@ -241,6 +241,37 @@ function handleMove(e) {
     destinationSquareId = e.target.id;
   }
 
+  // Check direction of movement
+  let dir = checkDir();
+
+  switch (dir) {
+    case "up":
+      currentPiece.classList.add("animate-up");
+      break;
+    case "down":
+      currentPiece.classList.add("animate-down");
+      break;
+    case "left":
+      currentPiece.classList.add("animate-left");
+      break;
+    case "right":
+      currentPiece.classList.add("animate-right");
+      break;
+    case "jump-up":
+      currentPiece.classList.add("animate-jump-up");
+      break;
+    case "jump-down":
+      currentPiece.classList.add("animate-jump-down");
+      break;
+    case "jump-left":
+      currentPiece.classList.add("animate-jump-left");
+      break;
+    case "jump-right":
+      currentPiece.classList.add("animate-jump-right");
+      break;
+  }
+
+  // Check if destination square has child nodes (either there is a piece or is a den or trap square)
   if (destinationSquare.hasChildNodes()) {
     // Opponent piece not in den
     if (destinationSquare.firstElementChild.classList.contains("piece")) {
@@ -249,7 +280,19 @@ function handleMove(e) {
         `.${opponent}-player.player-panel`
       );
       opponentPanel.append(opponentPiece);
-      destinationSquare.append(currentPiece);
+      setTimeout(() => {
+        currentPiece.classList.remove(
+          "animate-up",
+          "animate-right",
+          "animate-down",
+          "animate-left",
+          "animate-jump-up",
+          "animate-jump-down",
+          "animate-jump-left",
+          "animate-jump-right"
+        );
+        destinationSquare.append(currentPiece);
+      }, 500);
 
       // Update current position of opponent piece that was eaten
       currentPositions[opponent][opponentPiece.dataset.animal] = "";
@@ -265,26 +308,62 @@ function handleMove(e) {
         );
         opponentPanel.append(opponentPiece);
         destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
-        destinationSquare.append(currentPiece);
+        setTimeout(() => {
+          currentPiece.classList.remove(
+            "animate-up",
+            "animate-right",
+            "animate-down",
+            "animate-left",
+            "animate-jump-up",
+            "animate-jump-down",
+            "animate-jump-left",
+            "animate-jump-right"
+          );
+          destinationSquare.append(currentPiece);
+        }, 500);
 
         // Update current position of opponent piece that was eaten
         currentPositions[opponent][opponentPiece.dataset.animal] = "";
       } else {
         destinationSquare.firstElementChild.style.display = "none"; // if destination piece is den or trap
-        currentPiece.parentElement.firstElementChild.style.display =
-          "inline-block";
-        destinationSquare.append(currentPiece);
+        setTimeout(() => {
+          currentPiece.classList.remove(
+            "animate-up",
+            "animate-right",
+            "animate-down",
+            "animate-left",
+            "animate-jump-up",
+            "animate-jump-down",
+            "animate-jump-left",
+            "animate-jump-right"
+          );
+          currentPiece.parentElement.firstElementChild.style.display =
+            "inline-block";
+          destinationSquare.append(currentPiece);
+        }, 500);
       }
     }
   } else {
     // If exiting from trap
-    if (
-      currentPiece.parentElement.firstElementChild.classList.contains("trap")
-    ) {
-      currentPiece.parentElement.firstElementChild.style.display =
-        "inline-block";
-    }
-    destinationSquare.append(currentPiece);
+    setTimeout(() => {
+      if (
+        currentPiece.parentElement.firstElementChild.classList.contains("trap")
+      ) {
+        currentPiece.parentElement.firstElementChild.style.display =
+          "inline-block";
+      }
+      currentPiece.classList.remove(
+        "animate-up",
+        "animate-right",
+        "animate-down",
+        "animate-left",
+        "animate-jump-up",
+        "animate-jump-down",
+        "animate-jump-left",
+        "animate-jump-right"
+      );
+      destinationSquare.append(currentPiece);
+    }, 500);
   }
 
   // Clear highlighted squares
@@ -324,6 +403,40 @@ function handleMove(e) {
       }
     }
     return false;
+  }
+
+  // Check direction of movement
+  function checkDir() {
+    const [originRow, originCol] = currentPiece.parentElement.id;
+    const [destinationRow, destinationCol] = destinationSquareId;
+
+    let dir;
+
+    if (originRow === destinationRow) {
+      if (Number(destinationCol) - Number(originCol) === 3) {
+        dir = "jump-right";
+      } else if (Number(destinationCol) - Number(originCol) === -3) {
+        dir = "jump-left";
+      } else {
+        dir = Number(originCol) > Number(destinationCol) ? "left" : "right";
+      }
+    } else {
+      if (destinationRow.charCodeAt(0) - originRow.charCodeAt(0) === 4) {
+        dir = "jump-down";
+      } else if (
+        destinationRow.charCodeAt(0) - originRow.charCodeAt(0) ===
+        -4
+      ) {
+        dir = "jump-up";
+      } else {
+        dir =
+          originRow.charCodeAt(0) > destinationRow.charCodeAt(0)
+            ? "up"
+            : "down";
+      }
+    }
+
+    return dir;
   }
 }
 

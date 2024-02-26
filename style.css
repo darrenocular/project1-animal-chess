@@ -79,6 +79,8 @@ button:hover {
   height: 64px;
   border-radius: 50%;
   padding-left: 2px;
+  transition: transform 0.5s linear;
+  z-index: 5;
 }
 
 .piece:hover {
@@ -98,6 +100,38 @@ button:hover {
 .black-piece {
   border: 4px solid black;
   background-color: black;
+}
+
+.animate-left {
+  transform: translateX(-80px);
+}
+
+.animate-right {
+  transform: translateX(80px);
+}
+
+.animate-up {
+  transform: translateY(-80px);
+}
+
+.animate-down {
+  transform: translateY(80px);
+}
+
+.animate-jump-left {
+  transform: translateX(-240px);
+}
+
+.animate-jump-right {
+  transform: translateX(240px);
+}
+
+.animate-jump-up {
+  transform: translateY(-320px);
+}
+
+.animate-jump-down {
+  transform: translateY(320px);
 }
 
 /*----- INFO PANEL -----*/
@@ -160,6 +194,7 @@ th {
   margin-bottom: 24px;
   padding-bottom: 16px;
   animation: fadeIn 0.5s;
+  z-index: 10;
 }
 
 #rules > p,
