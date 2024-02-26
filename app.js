@@ -127,6 +127,7 @@ let currentPlayer;
 let currentPiece;
 let opponent;
 let winner;
+let isMoving = false;
 
 /*----- FUNCTIONS -----*/
 // Render board
@@ -210,22 +211,25 @@ function renderPieces() {
 
 // Handle click
 function handleClick(e) {
-  const squares = document.querySelectorAll(".square");
+  // Only triggers code block if piece is not moving (animation)
+  if (!isMoving) {
+    const squares = document.querySelectorAll(".square");
 
-  // Remove all highlights (if any)
-  for (const square of squares) {
-    square.style.removeProperty("background-color");
-    square.classList.remove("highlight");
+    // Remove all highlights (if any)
+    for (const square of squares) {
+      square.style.removeProperty("background-color");
+      square.classList.remove("highlight");
+    }
+
+    // Ensure player can only click their own pieces
+    if (checkOwnPiece(e)) {
+      const availableMoves = checkAvailableMoves(e);
+      highlightAvailableMoves(availableMoves);
+    }
+
+    // To be used for handleMove() below
+    currentPiece = e.target;
   }
-
-  // Ensure player can only click their own pieces
-  if (checkOwnPiece(e)) {
-    const availableMoves = checkAvailableMoves(e);
-    highlightAvailableMoves(availableMoves);
-  }
-
-  // To be used for handleMove() below
-  currentPiece = e.target;
 }
 
 // Handle move
@@ -233,6 +237,7 @@ function handleMove(e) {
   // Move piece
   let destinationSquareId;
   let destinationSquare;
+  isMoving = true;
   if (e.target.tagName === "IMG") {
     destinationSquare = e.target.parentElement;
     destinationSquareId = e.target.parentElement.id;
@@ -292,6 +297,7 @@ function handleMove(e) {
           "animate-jump-right"
         );
         destinationSquare.append(currentPiece);
+        isMoving = false;
       }, 500);
 
       // Update current position of opponent piece that was eaten
@@ -320,6 +326,7 @@ function handleMove(e) {
             "animate-jump-right"
           );
           destinationSquare.append(currentPiece);
+          isMoving = false;
         }, 500);
 
         // Update current position of opponent piece that was eaten
@@ -340,6 +347,7 @@ function handleMove(e) {
           currentPiece.parentElement.firstElementChild.style.display =
             "inline-block";
           destinationSquare.append(currentPiece);
+          isMoving = false;
         }, 500);
       }
     }
@@ -363,6 +371,7 @@ function handleMove(e) {
         "animate-jump-right"
       );
       destinationSquare.append(currentPiece);
+      isMoving = false;
     }, 500);
   }
 
